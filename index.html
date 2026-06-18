@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bianca · AI Budget Coach · Single &amp; Overstimulated</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blush:#E8A598;--blush-light:#F5D5CE;--blush-dark:#D4897A;
+  --sage:#8FAF8A;--sage-dark:#6B8F66;
+  --mocha:#8B6F5E;--mocha-dark:#5C4A3D;--mocha-deep:#3D2B23;
+  --cream:#FBF7F2;--cream-dark:#F0E8DC;--cream-border:#EAD9D0;
+  --white:#FFFCFA;--red:#C0392B;--gold:#C9A84C;
+}
+html{scroll-behavior:smooth}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--cream);color:var(--mocha-deep);min-height:100vh;overflow-x:hidden}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
+
+/* WELCOME */
+#welcome{align-items:center;justify-content:center;text-align:center;padding:48px 24px;background:linear-gradient(160deg,var(--cream) 0%,var(--cream-dark) 100%);position:relative;overflow:hidden}
+.blob{position:absolute;border-radius:50%;pointer-events:none}
+.blob-1{width:380px;height:380px;top:-130px;right:-130px;background:rgba(232,165,152,0.13)}
+.blob-2{width:320px;height:320px;bottom:-100px;left:-100px;background:rgba(143,175,138,0.13)}
+.welcome-inner{position:relative;z-index:1;max-width:420px}
+.brand-tag{font-size:0.63rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--sage-dark);font-weight:700;margin-bottom:14px}
+.welcome-emoji{font-size:3.6rem;margin-bottom:18px;display:block}
+.welcome-title{font-family:Georgia,serif;font-size:clamp(2rem,7vw,3.2rem);font-weight:normal;color:var(--mocha-deep);line-height:1.15;margin-bottom:16px}
+.welcome-title em{color:var(--blush);font-style:italic}
+.welcome-sub{font-size:0.97rem;color:var(--mocha);line-height:1.75;margin-bottom:12px}
+.feature-pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:30px}
+.pill{background:rgba(232,165,152,0.12);border:1px solid var(--cream-border);border-radius:20px;padding:5px 14px;font-size:0.73rem;color:var(--mocha-dark)}
+.btn-main{display:inline-block;background:var(--blush);color:#fff;border:none;padding:16px 50px;font-size:0.84rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;border-radius:40px;font-family:inherit;box-shadow:0 4px 22px rgba(232,165,152,0.42);transition:transform 0.2s,box-shadow 0.2s}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 6px 28px rgba(232,165,152,0.5)}
+.welcome-note{margin-top:14px;font-size:0.72rem;color:var(--mocha);opacity:0.6}
+.disclaimer-banner{margin-top:28px;padding:14px 18px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:10px;font-size:0.73rem;color:var(--mocha-dark);line-height:1.6;text-align:left}
+.disclaimer-banner strong{color:var(--mocha-deep)}
+
+/* INTAKE */
+#intake{background:var(--cream);padding:36px 20px 80px}
+.intake-inner{max-width:540px;margin:0 auto;width:100%}
+.back-btn{background:none;border:none;color:var(--mocha);cursor:pointer;font-size:0.85rem;padding:0;margin-bottom:22px;font-family:inherit;display:flex;align-items:center;gap:6px}
+.step-label{font-size:0.63rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--sage-dark);font-weight:700;margin-bottom:6px}
+.intake-title{font-family:Georgia,serif;font-size:1.85rem;font-weight:normal;color:var(--mocha-deep);margin-bottom:8px;line-height:1.2}
+.intake-title em{color:var(--blush)}
+.intake-sub{color:var(--mocha);font-size:0.87rem;line-height:1.65;margin-bottom:22px}
+.card{background:var(--white);border:1px solid var(--cream-border);border-radius:12px;padding:22px;margin-bottom:14px}
+.card-head{font-weight:700;color:var(--mocha-deep);font-size:0.85rem;margin-bottom:14px}
+.card-note{font-size:0.72rem;color:var(--mocha);font-weight:400}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+label.field-label{display:block;font-size:0.67rem;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#9B7B6B;margin-bottom:6px}
+input[type=number],select,textarea{width:100%;padding:11px 15px;border:1px solid var(--cream-border);border-radius:6px;background:var(--white);font-size:0.95rem;color:var(--mocha-deep);outline:none;font-family:inherit;transition:border-color 0.2s;-webkit-appearance:none;appearance:none}
+input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
+.budget-bar{margin-top:16px;padding:12px 16px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;font-size:0.86rem;transition:all 0.3s}
+.budget-bar.ok{background:rgba(143,175,138,0.12);border:1px solid var(--sage)}
+.budget-bar.over{background:rgba(192,57,43,0.1);border:1px solid var(--red)}
+.budget-bar .bleft{color:var(--mocha-deep)}
+.budget-bar .bright{font-weight:700}
+.budget-bar.ok .bright{color:var(--sage-dark)}
+.budget-bar.over .bright{color:var(--red)}
+.challenges-list{display:flex;flex-direction:column;gap:8px}
+.challenge-btn{text-align:left;padding:11px 16px;background:var(--white);border:1.5px solid var(--cream-border);border-radius:8px;color:var(--mocha-dark);font-size:0.87rem;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:10px;transition:all 0.2s}
+.challenge-btn.selected{background:rgba(232,165,152,0.15);border-color:var(--blush);color:#8B3A2A}
+.c-check{width:18px;height:18px;border-radius:50%;border:2px solid var(--cream-border);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.6rem;color:#fff;transition:all 0.2s}
+.challenge-btn.selected .c-check{background:var(--blush);border-color:var(--blush)}
+.submit-btn{width:100%;padding:17px;background:var(--blush);color:#fff;border:none;font-size:0.85rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:40px;font-family:inherit;box-shadow:0 4px 16px rgba(232,165,152,0.35);transition:all 0.2s;margin-top:4px}
+.submit-btn:disabled{background:var(--cream-border);box-shadow:none;cursor:not-allowed}
+.submit-btn:not(:disabled):hover{transform:translateY(-1px)}
+.privacy-note{text-align:center;margin-top:10px;font-size:0.72rem;color:var(--mocha);opacity:0.6}
+
+/* CHAT */
+#chat{height:100vh}
+.chat-header{background:var(--white);border-bottom:1px solid var(--cream-border);padding:14px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0;box-shadow:0 1px 8px rgba(0,0,0,0.04)}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--blush),var(--sage));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.chat-name{font-weight:700;color:var(--mocha-deep);font-size:0.94rem}
+.chat-sub{font-size:0.67rem;color:var(--sage-dark);font-weight:600;letter-spacing:0.07em}
+.header-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+.restart-btn{background:none;border:1px solid var(--cream-border);padding:7px 14px;font-size:0.72rem;color:var(--mocha);cursor:pointer;border-radius:20px;font-family:inherit;transition:all 0.2s}
+.restart-btn:hover{border-color:var(--blush);color:var(--blush)}
+.messages{flex:1;overflow-y:auto;padding:20px 16px}
+.messages-inner{max-width:640px;margin:0 auto}
+.loading-state{text-align:center;padding:60px 0;color:var(--mocha)}
+.loading-emoji{font-size:2.2rem;margin-bottom:12px}
+.msg-wrap{margin-bottom:20px;display:flex;flex-direction:column}
+.msg-wrap.user{align-items:flex-end}
+.msg-wrap.ai{align-items:flex-start}
+.msg-from{font-size:0.63rem;color:var(--mocha);margin-bottom:5px;letter-spacing:0.1em;font-weight:700}
+.bubble{max-width:88%;padding:15px 19px;font-size:0.9rem;line-height:1.72;border-radius:18px}
+.bubble.user{background:var(--blush);color:#fff;border-radius:18px 18px 4px 18px;box-shadow:0 2px 8px rgba(232,165,152,0.25)}
+.bubble.ai{background:var(--white);color:var(--mocha-deep);border:1px solid var(--cream-border);border-radius:4px 18px 18px 18px;box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.bubble.ai p{margin-bottom:4px}
+.bubble.disclaimer{background:rgba(201,168,76,0.08);border-color:rgba(201,168,76,0.3);font-size:0.82rem;color:var(--mocha-dark)}
+
+@keyframes bop{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-7px);opacity:1}}
+.typing-dot{width:9px;height:9px;border-radius:50%;background:var(--blush);display:inline-block;animation:bop 1.2s ease-in-out infinite;opacity:0.5}
+.typing-dot:nth-child(2){animation-delay:0.2s}
+.typing-dot:nth-child(3){animation-delay:0.4s}
+.quick-prompts{padding:0 16px 10px;flex-shrink:0}
+.quick-inner{max-width:640px;margin:0 auto;display:flex;gap:8px;flex-wrap:wrap}
+.qp-btn{padding:7px 14px;background:var(--white);border:1px solid var(--cream-border);border-radius:20px;font-size:0.77rem;color:var(--mocha);cursor:pointer;font-family:inherit;transition:all 0.2s}
+.qp-btn:hover{border-color:var(--blush);color:var(--blush)}
+.chat-input-bar{background:var(--white);border-top:1px solid var(--cream-border);padding:14px 20px;flex-shrink:0}
+.chat-input-inner{max-width:640px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.chat-input{flex:1;padding:12px 18px;border:1px solid var(--cream-border);background:var(--cream);font-size:0.9rem;color:var(--mocha-deep);outline:none;border-radius:26px;font-family:inherit;transition:border-color 0.2s}
+.chat-input:focus{border-color:var(--blush)}
+.send-btn{width:44px;height:44px;border-radius:50%;background:var(--blush);border:none;cursor:pointer;color:#fff;font-size:1.1rem;font-weight:700;flex-shrink:0;box-shadow:0 2px 10px rgba(232,165,152,0.4);transition:all 0.2s;display:flex;align-items:center;justify-content:center}
+.send-btn:disabled{background:var(--cream-border);box-shadow:none;cursor:not-allowed}
+.send-btn:not(:disabled):hover{transform:scale(1.05)}
+.error-note{background:rgba(232,165,152,0.12);border:1px solid var(--blush);border-radius:8px;padding:12px 16px;font-size:0.8rem;color:#8B3A2A;margin:4px 16px}
+.apikey-screen{align-items:center;justify-content:center;text-align:center;padding:48px 24px;background:linear-gradient(160deg,var(--cream) 0%,var(--cream-dark) 100%);position:relative;overflow:hidden}
+.apikey-inner{position:relative;z-index:1;max-width:420px;width:100%}
+.apikey-input{width:100%;padding:14px 18px;border:1.5px solid var(--cream-border);border-radius:10px;background:var(--white);font-size:0.9rem;color:var(--mocha-deep);outline:none;font-family:monospace;letter-spacing:0.04em;transition:border-color 0.2s;margin-bottom:12px}
+.apikey-input:focus{border-color:var(--blush)}
+.apikey-note{font-size:0.75rem;color:var(--mocha);line-height:1.65;margin-bottom:20px;opacity:0.8}
+.apikey-note a{color:var(--blush);text-decoration:none}
+.apikey-note a:hover{text-decoration:underline}
+.key-secure{display:flex;align-items:center;gap:8px;justify-content:center;font-size:0.72rem;color:var(--sage-dark);margin-top:10px}
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div id="welcome" class="screen active">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="welcome-inner">
+    <span class="welcome-emoji">💸</span>
+    <div class="brand-tag">Single &amp; Overstimulated</div>
+    <h1 class="welcome-title">Meet <em>Bianca</em>,<br>Your Budget Coach</h1>
+    <p class="welcome-sub">AI-powered budget advice built for single moms on one income. Ask anything — budgeting, tax tips, savings, investing, and more.</p>
+    <div class="feature-pills">
+      <span class="pill">💰 Budget Analysis</span>
+      <span class="pill">💳 Debt Strategy</span>
+      <span class="pill">📋 Tax Tips</span>
+      <span class="pill">📈 Investing Basics</span>
+      <span class="pill">🗺️ State-Specific Advice</span>
+    </div>
+    <button class="btn-main" onclick="goToIntake()">Build My Budget Plan</button>
+    <p class="welcome-note">Takes 2 minutes · Free · Private</p>
+    <div class="disclaimer-banner">
+      <strong>⚠️ Financial Disclaimer:</strong> Bianca is an AI tool for educational and informational purposes only. Nothing shared here constitutes professional financial, tax, or legal advice. Always consult a licensed financial advisor, CPA, or attorney before making major financial decisions.
+    </div>
+  </div>
+</div>
+
+<!-- ACCESS CODE -->
+<div id="accesscode" class="screen apikey-screen">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="apikey-inner">
+    <span style="font-size:2.8rem;margin-bottom:16px;display:block">🔑</span>
+    <div class="brand-tag">Single &amp; Overstimulated</div>
+    <h2 style="font-family:Georgia,serif;font-size:1.8rem;font-weight:normal;color:var(--mocha-deep);margin-bottom:10px;line-height:1.2">Enter your<br><em style="color:var(--blush)">Access Code</em></h2>
+    <p style="font-size:0.9rem;color:var(--mocha);line-height:1.7;margin-bottom:22px">You should have received your access code via email after purchase. Enter it below to get started.</p>
+    <input class="apikey-input" type="text" id="code-input" placeholder="BIANCA-XXXX-XXXX" oninput="checkCode()" style="text-transform:uppercase;letter-spacing:0.08em"/>
+    <p class="apikey-note">
+      Don't have a code? Get access at <a href="https://your-gumroad-link.com" target="_blank">Single &amp; Overstimulated →</a><br/>
+      Already purchased? Check your email for your code or contact <a href="mailto:support@singleandoverstimulated.com">support</a>.
+    </p>
+    <button class="btn-main" id="code-btn" onclick="saveCode()" disabled>Let's Go →</button>
+    <p class="key-secure">🔒 Your code is verified securely · Never stored in your browser</p>
+    <div style="margin-top:20px;padding:14px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:10px;font-size:0.73rem;color:var(--mocha-dark);line-height:1.6;text-align:left">
+      <strong>⚠️ Financial Disclaimer:</strong> Bianca is an AI tool for educational purposes only. Nothing shared here constitutes professional financial, tax, or legal advice. Always consult a licensed financial advisor or CPA before major financial decisions.
+    </div>
+  </div>
+</div>
+
+<!-- INTAKE -->
+<div id="intake" class="screen">
+  <div class="intake-inner">
+    <button class="back-btn" onclick="showScreen('welcome')">← Back</button>
+    <div class="step-label">Budget Intake</div>
+    <h2 class="intake-title">Tell Bianca about<br><em>your money</em></h2>
+    <p class="intake-sub">The more honest you are, the better your plan. This conversation is private and never stored.</p>
+
+    <!-- Income -->
+    <div class="card">
+      <div class="card-head">💰 Income &amp; Household</div>
+      <div class="grid-2">
+        <div>
+          <label class="field-label">Monthly Take-Home *</label>
+          <input type="number" id="income" placeholder="$0" oninput="updateBar()"/>
+        </div>
+        <div>
+          <label class="field-label">Number of Kids</label>
+          <select id="kids">
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">State *</label>
+          <select id="state" onchange="updateBar()">
+            <option value="">Select state...</option>
+            <option>Alabama</option><option>Alaska</option><option>Arizona</option><option>Arkansas</option>
+            <option>California</option><option>Colorado</option><option>Connecticut</option><option>Delaware</option>
+            <option>Florida</option><option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+            <option>Illinois</option><option>Indiana</option><option>Iowa</option><option>Kansas</option>
+            <option>Kentucky</option><option>Louisiana</option><option>Maine</option><option>Maryland</option>
+            <option>Massachusetts</option><option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+            <option>Missouri</option><option>Montana</option><option>Nebraska</option><option>Nevada</option>
+            <option>New Hampshire</option><option>New Jersey</option><option>New Mexico</option><option>New York</option>
+            <option>North Carolina</option><option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+            <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option><option>South Carolina</option>
+            <option>South Dakota</option><option>Tennessee</option><option>Texas</option><option>Utah</option>
+            <option>Vermont</option><option>Virginia</option><option>Washington</option><option>Washington DC</option>
+            <option>West Virginia</option><option>Wisconsin</option><option>Wyoming</option>
+          </select>
+        </div>
+        <div>
+          <label class="field-label">City / Metro Area</label>
+          <input type="text" id="city" placeholder="e.g. Atlanta, GA" style="padding:11px 15px;border:1px solid var(--cream-border);border-radius:6px;background:var(--white);font-size:0.95rem;color:var(--mocha-deep);outline:none;font-family:inherit;width:100%;transition:border-color 0.2s"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core expenses -->
+    <div class="card">
+      <div class="card-head">🏠 Housing &amp; Transportation</div>
+      <div class="grid-2">
+        <div><label class="field-label">🏠 Rent / Mortgage</label><input type="number" id="rent" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🚗 Car Payment</label><input type="number" id="car" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">⛽ Gas / Transport</label><input type="number" id="gas" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">💡 Utilities</label><input type="number" id="utilities" placeholder="$0" oninput="updateBar()"/></div>
+      </div>
+    </div>
+
+    <!-- Family expenses -->
+    <div class="card">
+      <div class="card-head">👶 Family &amp; Food</div>
+      <div class="grid-2">
+        <div><label class="field-label">🛒 Groceries</label><input type="number" id="groceries" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">👶 Childcare</label><input type="number" id="childcare" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🏫 School / Activities</label><input type="number" id="school" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🍽️ Dining Out</label><input type="number" id="dining" placeholder="$0" oninput="updateBar()"/></div>
+      </div>
+    </div>
+
+    <!-- Bills -->
+    <div class="card">
+      <div class="card-head">📱 Bills &amp; Insurance</div>
+      <div class="grid-2">
+        <div><label class="field-label">📱 Phone</label><input type="number" id="phone" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">📺 Subscriptions</label><input type="number" id="subscriptions" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🏥 Health Insurance</label><input type="number" id="healthInsurance" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🚘 Auto Insurance</label><input type="number" id="autoInsurance" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🏠 Renters / Home Ins.</label><input type="number" id="homeInsurance" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🛡️ Life Insurance</label><input type="number" id="lifeInsurance" placeholder="$0" oninput="updateBar()"/></div>
+      </div>
+    </div>
+
+    <!-- Personal & Debt -->
+    <div class="card">
+      <div class="card-head">💳 Debt &amp; Personal</div>
+      <div class="grid-2">
+        <div><label class="field-label">💳 Credit Cards</label><input type="number" id="creditCards" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">🎓 Student Loans</label><input type="number" id="studentLoans" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">💄 Personal Care</label><input type="number" id="personalCare" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">👗 Clothing</label><input type="number" id="clothing" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">📦 Miscellaneous</label><input type="number" id="miscellaneous" placeholder="$0" oninput="updateBar()"/></div>
+        <div><label class="field-label">💊 Medical / Rx</label><input type="number" id="medical" placeholder="$0" oninput="updateBar()"/></div>
+      </div>
+      <div id="budget-bar" class="budget-bar" style="display:none">
+        <span class="bleft">Total expenses: <strong id="total-amt">$0</strong></span>
+        <span class="bright" id="budget-status"></span>
+      </div>
+    </div>
+
+    <!-- Challenges -->
+    <div class="card">
+      <div class="card-head">💭 Biggest money challenge? <span class="card-note">Pick up to 3 *</span></div>
+      <div class="challenges-list">
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I'm always in the negative before month ends</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I can't seem to save anything</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>My debt feels overwhelming</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>Childcare is eating everything</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I have no emergency fund</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I want to start investing</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I want to reduce my tax bill</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I want to buy a home someday</button>
+        <button class="challenge-btn" onclick="toggleChallenge(this)"><span class="c-check">✓</span>I need to build credit</button>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submit-btn" onclick="startChat()" disabled>Get My Budget Plan →</button>
+    <p class="privacy-note">Income, state, and at least 1 challenge required · Info never stored</p>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="chat" class="screen" style="height:100vh;display:none;flex-direction:column">
+  <div class="chat-header">
+    <div class="avatar">💸</div>
+    <div>
+      <div class="chat-name">Bianca</div>
+      <div class="chat-sub">AI Budget Coach · Single &amp; Overstimulated</div>
+    </div>
+    <div class="header-actions">
+      <span id="usage-display" style="font-size:0.72rem;color:var(--mocha);padding:4px 10px;background:var(--cream);border:1px solid var(--cream-border);border-radius:20px;"></span>
+      <button class="restart-btn" onclick="restartSession()">New Budget</button>
+    </div>
+  </div>
+
+  <div class="messages" id="messages">
+    <div class="messages-inner" id="messages-inner">
+      <div class="loading-state" id="loading-state">
+        <div class="loading-emoji">💸</div>
+        <p>Bianca is reviewing your numbers...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-prompts" id="quick-prompts" style="display:none">
+    <div class="quick-inner">
+      <button class="qp-btn" onclick="quickAsk(this)">What tax deductions can I claim?</button>
+      <button class="qp-btn" onclick="quickAsk(this)">What assistance programs exist in my state?</button>
+      <button class="qp-btn" onclick="quickAsk(this)">Best savings accounts for single moms?</button>
+      <button class="qp-btn" onclick="quickAsk(this)">How do I start a Roth IRA?</button>
+      <button class="qp-btn" onclick="quickAsk(this)">How do I pay off debt faster?</button>
+    </div>
+  </div>
+
+  <div id="error-area"></div>
+
+  <div class="chat-input-bar">
+    <div class="chat-input-inner">
+      <input class="chat-input" id="chat-input" type="text" placeholder="Ask Bianca anything — budgeting, taxes, investing..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button class="send-btn" id="send-btn" onclick="sendMsg()" disabled>→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DISCLAIMER = `⚠️ Reminder: I'm an AI coach for educational purposes only. Nothing I share is professional financial, tax, or legal advice. For major decisions, please consult a licensed CPA, financial advisor, or attorney.`;
+
+const PERSONA = `You are Bianca, the AI Budget Coach for Single & Overstimulated — a financial wellness brand for single moms who are exhausted but still showing up.
+
+Your voice: warm, real, millennial, faith-adjacent but sassy. Big sister energy. No fluff, no judgment. Practical money wisdom rooted in real life.
+
+You have deep knowledge of personal finance for single moms. When asked about:
+- Tax laws, deductions, and credits (especially for single parents)
+- Specific product or account recommendations — name real ones (Ally, Fidelity, Marcus, etc.)
+- State and local assistance programs, benefits, and resources
+- Interest rates and savings accounts — share your best knowledge and suggest they verify current rates
+- Any financial topic — give your best, most specific answer based on your training knowledge
+
+When giving your initial budget plan, always factor in the user's state. Different states have:
+- No state income tax (FL, TX, NV, WA, WY, SD, TN, AK, NH) vs high state income tax (CA, NY, NJ, HI)
+- State-specific childcare assistance and subsidy programs
+- State homebuyer programs and down payment assistance
+- State EITC and tax credits that may supplement federal credits
+- Varying cost of living that affects whether their budget benchmarks are realistic
+
+When giving your initial budget plan, respond with:
+1. ONE line of genuine acknowledgment — real, not pitying
+2. **BUDGET SNAPSHOT** — her actual numbers with % of income, flag anything out of balance (housing >30%, total debt >15-20%, etc.)
+3. **TOP 3 PRIORITIES** — specific to her numbers, in order of urgency
+4. **THIS MONTH'S MOVES** — 3 actionable steps with real dollar amounts from her numbers
+5. One real closing line
+
+For follow-up questions, search the web when relevant and give specific, current answers. When recommending accounts, products, or services — name actual ones (e.g. "Ally Bank HYSA" not "a savings account"). When discussing taxes, be specific about deductions single moms qualify for.
+
+Always end responses that involve specific financial products or tax advice with a brief one-line disclaimer reminding her to verify with a professional.
+
+Rules: Use her actual numbers always. Never shame. Keep it warm but concise. Bold section headers and key dollar amounts.`;
+
+let apiHistory = [];
+let msgCount = 0;
+
+const EXPENSE_IDS = ['rent','car','gas','utilities','groceries','childcare','school','dining','phone','subscriptions','healthInsurance','autoInsurance','homeInsurance','lifeInsurance','creditCards','studentLoans','personalCare','clothing','miscellaneous','medical'];
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.remove('active');
+    s.style.display = 'none';
+  });
+  const el = document.getElementById(id);
+  el.style.display = id === 'chat' ? 'flex' : 'flex';
+  el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function updateBar() {
+  const income = parseFloat(document.getElementById('income').value)||0;
+  const total = EXPENSE_IDS.reduce((s,k)=>s+(parseFloat(document.getElementById(k)?.value)||0),0);
+  const bar = document.getElementById('budget-bar');
+  const totalEl = document.getElementById('total-amt');
+  const statusEl = document.getElementById('budget-status');
+  if(income>0){
+    bar.style.display='flex';
+    totalEl.textContent='$'+total.toLocaleString();
+    const left=income-total;
+    if(left>=0){bar.className='budget-bar ok';statusEl.textContent='$'+left.toLocaleString()+' remaining';}
+    else{bar.className='budget-bar over';statusEl.textContent='$'+Math.abs(left).toLocaleString()+' over budget';}
+  } else { bar.style.display='none'; }
+  const challenges=document.querySelectorAll('.challenge-btn.selected');
+  const state=document.getElementById('state')?.value||'';
+  document.getElementById('submit-btn').disabled=!income||challenges.length===0||!state;
+}
+
+function toggleChallenge(btn){
+  const sel=document.querySelectorAll('.challenge-btn.selected');
+  if(!btn.classList.contains('selected')&&sel.length>=3)return;
+  btn.classList.toggle('selected');
+  updateBar();
+}
+
+function buildIntakeMessage(){
+  const income=parseFloat(document.getElementById('income').value)||0;
+  const kids=document.getElementById('kids').value;
+  const state=document.getElementById('state').value||'Not specified';
+  const city=document.getElementById('city').value||'Not specified';
+  const labels={rent:'Rent/Mortgage',car:'Car payment',gas:'Gas/Transport',utilities:'Utilities',groceries:'Groceries',childcare:'Childcare',school:'School/Activities',dining:'Dining out',phone:'Phone',subscriptions:'Subscriptions',healthInsurance:'Health insurance',autoInsurance:'Auto insurance',homeInsurance:"Renters/Home insurance",lifeInsurance:'Life insurance',creditCards:'Credit cards',studentLoans:'Student loans',personalCare:'Personal care',clothing:'Clothing',miscellaneous:'Miscellaneous',medical:'Medical/Rx'};
+  const lines=EXPENSE_IDS.filter(k=>(parseFloat(document.getElementById(k)?.value)||0)>0).map(k=>`- ${labels[k]}: $${parseFloat(document.getElementById(k).value).toLocaleString()}`).join('\n');
+  const total=EXPENSE_IDS.reduce((s,k)=>s+(parseFloat(document.getElementById(k)?.value)||0),0);
+  const challenges=[...document.querySelectorAll('.challenge-btn.selected')].map(b=>b.textContent.trim()).join('; ');
+  return `${PERSONA}
+
+My financial situation:
+- State: ${state}
+- City/Metro: ${city}
+- Monthly take-home: $${income.toLocaleString()}
+- Kids: ${kids}
+${lines}
+- Total monthly expenses: $${total.toLocaleString()}
+- Monthly surplus/deficit: $${(income-total).toLocaleString()}
+- My biggest challenges: ${challenges}
+
+Please give me my personalized budget plan.`;
+}
+
+async function callBianca(messages){
+  const code = window._biancaCode;
+  if(!code) throw new Error('No access code found. Please refresh and enter your code.');
+
+  let res, rawText, data;
+
+  try {
+    res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: messages, code: code })
+    });
+  } catch(fetchErr) {
+    throw new Error('Network error — check your connection and try again.');
+  }
+
+  try {
+    rawText = await res.text();
+  } catch(textErr) {
+    throw new Error('Could not read response. Please try again.');
+  }
+
+  try {
+    data = JSON.parse(rawText);
+  } catch(parseErr) {
+    throw new Error('Unexpected server response. Please try again.');
+  }
+
+  // Handle limit reached
+  if(res.status === 429 && data.error === 'limit_reached'){
+    updateUsageDisplay(data.messages_used, data.messages_limit, false);
+    throw new Error(
+      'LIMIT_REACHED:' + data.reset_date + ':' + data.upgrade_url
+    );
+  }
+
+  if(data && data.error && data.error !== 'limit_reached'){
+    throw new Error(data.error);
+  }
+
+  // Update usage display
+  if(data.usage){
+    updateUsageDisplay(data.usage.used, data.usage.limit, data.usage.unlimited);
+  }
+
+  if(!data.text) throw new Error('Empty response. Please try again.');
+  return data.text;
+}
+
+function updateUsageDisplay(used, limit, unlimited){
+  const el = document.getElementById('usage-display');
+  if(!el) return;
+  if(unlimited){
+    el.textContent = '∞ Unlimited';
+    el.style.color = 'var(--sage-dark)';
+  } else {
+    const remaining = Math.max(0, limit - used);
+    el.textContent = remaining + ' messages left';
+    el.style.color = remaining <= 5 ? '#C0392B' : 'var(--mocha)';
+  }
+}
+
+
+
+function addMessage(role,text,type=''){
+  const inner=document.getElementById('messages-inner');
+  const loading=document.getElementById('loading-state');
+  if(loading) loading.remove();
+  msgCount++;
+  const wrap=document.createElement('div');
+  wrap.className=`msg-wrap ${role==='user'?'user':'ai'}`;
+  if(role==='ai'){
+    const from=document.createElement('div');
+    from.className='msg-from';
+    from.textContent='BIANCA';
+    wrap.appendChild(from);
+  }
+  const bubble=document.createElement('div');
+  bubble.className=`bubble ${role==='user'?'user':'ai'} ${type}`;
+  if(role==='ai'){
+    bubble.innerHTML=formatText(text);
+  } else {
+    bubble.textContent=text;
+  }
+  wrap.appendChild(bubble);
+  inner.appendChild(wrap);
+  document.getElementById('messages').scrollTop=99999;
+  if(msgCount===1&&role==='ai'){
+    document.getElementById('quick-prompts').style.display='block';
+  }
+}
+
+function showTyping(){
+  const inner=document.getElementById('messages-inner');
+  const t=document.createElement('div');
+  t.className='msg-wrap ai';t.id='typing-indicator';
+  const b=document.createElement('div');
+  b.className='bubble ai';b.style.padding='16px 20px';
+  b.innerHTML='<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+  t.appendChild(b);inner.appendChild(t);
+  document.getElementById('messages').scrollTop=99999;
+}
+
+function removeTyping(){
+  const t=document.getElementById('typing-indicator');
+  if(t) t.remove();
+}
+
+function formatText(text){
+  return text.split('\n').map(line=>{
+    const esc=line.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const bold=esc.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+    return `<p>${bold||'&nbsp;'}</p>`;
+  }).join('');
+}
+
+function setSendEnabled(on){
+  document.getElementById('send-btn').disabled=!on;
+  document.getElementById('chat-input').disabled=!on;
+}
+
+function showError(msg){
+  const area=document.getElementById('error-area');
+  area.innerHTML=`<div class="error-note">⚠️ ${msg}</div>`;
+  setTimeout(()=>{area.innerHTML='';},7000);
+}
+
+async function startChat(){
+  showScreen('chat');
+  const intakeMsg=buildIntakeMessage();
+  apiHistory=[{role:'user',content:intakeMsg}];
+  try{
+    const reply=await callBianca(apiHistory);
+    apiHistory.push({role:'assistant',content:reply});
+    addMessage('ai',reply);
+    addMessage('ai',DISCLAIMER,'disclaimer');
+    setSendEnabled(true);
+  } catch(e){
+    document.getElementById('loading-state')?.remove();
+    if(e.message.startsWith('LIMIT_REACHED:')){
+      const parts=e.message.split(':');
+      const resetDate=parts[1];
+      const upgradeUrl=parts[2]||'#';
+      addMessage('ai','Hey love — you\'ve used all your messages this month. Your limit resets on '+resetDate+'. Want more? <a href="'+upgradeUrl+'" target="_blank" style="color:var(--blush);font-weight:700;">Upgrade to unlimited access →</a>');
+    } else {
+      addMessage('ai','Something went wrong: '+e.message);
+      showError(e.message);
+    }
+    setSendEnabled(true);
+  }
+}
+
+async function sendMsg(){
+  const input=document.getElementById('chat-input');
+  const text=input.value.trim();
+  if(!text) return;
+  input.value='';
+  setSendEnabled(false);
+  document.getElementById('quick-prompts').style.display='none';
+  addMessage('user',text);
+  showTyping();
+  const newHistory=[...apiHistory,{role:'user',content:text}];
+  try{
+    const reply=await callBianca(newHistory);
+    apiHistory=[...newHistory,{role:'assistant',content:reply}];
+    removeTyping();
+    addMessage('ai',reply);
+  } catch(e){
+    removeTyping();
+    if(e.message.startsWith('LIMIT_REACHED:')){
+      const parts=e.message.split(':');
+      const resetDate=parts[1];
+      const upgradeUrl=parts[2]||'#';
+      addMessage('ai','Hey love — you\'ve used all your messages this month. Your limit resets on '+resetDate+'. Want more? <a href="'+upgradeUrl+'" target="_blank" style="color:var(--blush);font-weight:700;">Upgrade to unlimited access →</a>');
+    } else {
+      addMessage('ai','Oops — '+e.message+' Try asking again!');
+      showError(e.message);
+    }
+  }
+  setSendEnabled(true);
+}
+
+function quickAsk(btn){
+  document.getElementById('chat-input').value=btn.textContent;
+  document.getElementById('quick-prompts').style.display='none';
+  sendMsg();
+}
+
+function restart(){
+  apiHistory=[];msgCount=0;document.getElementById('messages-inner').innerHTML='<div class="loading-state" id="loading-state"><div class="loading-emoji">💸</div><p>Bianca is reviewing your numbers...</p></div>';
+  document.getElementById('quick-prompts').style.display='none';
+  document.getElementById('error-area').innerHTML='';
+  setSendEnabled(false);
+  showScreen('welcome');
+}
+
+function goToIntake(){
+  if(window._biancaCode){ showScreen('intake'); } else { showScreen('accesscode'); }
+}
+
+function restartSession(){
+  // Keep the code but reset the chat
+  apiHistory=[];msgCount=0;
+  document.getElementById('messages-inner').innerHTML='<div class="loading-state" id="loading-state"><div class="loading-emoji">💸</div><p>Bianca is reviewing your numbers...</p></div>';
+  document.getElementById('quick-prompts').style.display='none';
+  document.getElementById('error-area').innerHTML='';
+  document.getElementById('usage-display').textContent='';
+  setSendEnabled(false);
+  showScreen('intake');
+}
+
+function checkCode(){
+  const val=document.getElementById('code-input').value.trim();
+  document.getElementById('code-btn').disabled=val.length < 12;
+}
+
+function saveCode(){
+  const val=document.getElementById('code-input').value.trim().toUpperCase();
+  if(!val) return;
+  window._biancaCode=val;
+  showScreen('intake');
+}
+</script>
+</body>
+</html>
