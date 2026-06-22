@@ -23,16 +23,11 @@ module.exports = async (req, res) => {
       }
     );
 
-    const records = await lookupRes.json();
+    const rawText = await lookupRes.text();
 
-    if (!records || records.length === 0) {
-      return res.status(401).json({ error: 'Code not found: ' + cleanCode });
-    }
-
-    const record = records[0];
     return res.status(200).json({
-      text: 'Supabase connected! Found code: ' + record.code + ' | Tier: ' + record.tier + ' | Used: ' + record.messages_used + '/' + record.messages_limit,
-      usage: { used: record.messages_used, limit: record.messages_limit, unlimited: false, tier: record.tier }
+      text: 'Supabase raw response: ' + rawText,
+      usage: { used: 0, limit: 30, unlimited: false, tier: 'basic' }
     });
 
   } catch (e) {
