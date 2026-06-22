@@ -35,10 +35,17 @@ module.exports = async (req, res) => {
     .eq('code', code.trim().toUpperCase())
     .single();
 
-  if (dbError || !record) {
-    return res.status(401).json({
-      error: 'Invalid access code. Double-check your code and try again.'
+  if (dbError) {
+    return res.status(500).json({
+      error: 'Database error: ' + dbError.message
     });
+  }
+
+  if (!record) {
+    return res.status(401).json({
+      error: 'Code not found. Double-check your code and try again.'
+    });
+  }
   }
 
   if (!record.active) {
