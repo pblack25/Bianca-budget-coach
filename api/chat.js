@@ -1,20 +1,13 @@
-const { createClient } = require('@supabase/supabase-js');
-
-const UPGRADE_URL = process.env.UPGRADE_URL || 'https://your-gumroad-link.com';
-
 module.exports = async (req, res) => {
-  // CORS headers — allow requests from any origin
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Handle preflight
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { messages, code } = req.body || {};
 
-  // Validate inputs
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'Invalid request format.' });
   }
@@ -22,36 +15,38 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Access code is required.' });
   }
 
-  // Connect to Supabase
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY
-  );
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY;
+  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+  const UPGRADE_URL = process.env.UPGRADE_URL || 'https://your-gumroad-link.com';
+  const cleanCode = code.trim().toUpperCase();
 
-  // Look up the access code
-  const { data: record, error: dbError } = await supabase
-    .from('access_codes')
-    .select('*')
-    .eq('code', code.trim().toUpperCase())
-    .single();
-
-  if (dbError) {
-    return res.status(500).json({
-      error: 'Database error: ' + dbError.message
-    });
+  // Look up the access code via Supabase REST API
+  let records;
+  try {
+    const lookupRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/access_codes?code=eq.${encodeURIComponent(cleanCode)}&select=*`,
+      {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    records = await lookupRes.json();
+  } catch (e) {
+    return res.status(500).json({ error: 'Database connection error: ' + e.message });
   }
 
-  if (!record) {
-    return res.status(401).json({
-      error: 'Code not found. Double-check your code and try again.'
-    });
+  if (!records || records.length === 0) {
+    return res.status(401).json({ error: 'Code not found. Double-check your code and try again.' });
   }
-  }
+
+  const record = records[0];
 
   if (!record.active) {
-    return res.status(403).json({
-      error: 'This access code has been deactivated. Email support@singleandoverstimulated.com for help.'
-    });
+    return res.status(403).json({ error: 'This access code has been deactivated. Please contact support.' });
   }
 
   // Auto-reset monthly usage if reset date has passed
@@ -62,10 +57,19 @@ module.exports = async (req, res) => {
   if (today >= resetDate) {
     const nextReset = new Date(today.getFullYear(), today.getMonth() + 1, 1)
       .toISOString().split('T')[0];
-    await supabase
-      .from('access_codes')
-      .update({ messages_used: 0, reset_date: nextReset })
-      .eq('code', record.code);
+    await fetch(
+      `${SUPABASE_URL}/rest/v1/access_codes?code=eq.${encodeURIComponent(cleanCode)}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ messages_used: 0, reset_date: nextReset })
+      }
+    );
     currentUsage = 0;
   }
 
@@ -84,13 +88,13 @@ module.exports = async (req, res) => {
   }
 
   // Call Anthropic API
-  let anthropicRes, anthropicData;
+  let anthropicData;
   try {
-    anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
+    const anthropicRes = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': ANTHROPIC_KEY,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
@@ -101,7 +105,7 @@ module.exports = async (req, res) => {
     });
     anthropicData = await anthropicRes.json();
   } catch (e) {
-    return res.status(500).json({ error: 'AI service error. Please try again in a moment.' });
+    return res.status(500).json({ error: 'AI service error. Please try again.' });
   }
 
   if (anthropicData.error) {
@@ -113,13 +117,21 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Empty response. Please try again.' });
   }
 
-  // Increment usage count
-  await supabase
-    .from('access_codes')
-    .update({ messages_used: currentUsage + 1 })
-    .eq('code', record.code);
+  // Update usage count
+  await fetch(
+    `${SUPABASE_URL}/rest/v1/access_codes?code=eq.${encodeURIComponent(cleanCode)}`,
+    {
+      method: 'PATCH',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ messages_used: currentUsage + 1 })
+    }
+  );
 
-  // Return response with usage info
   return res.status(200).json({
     text: textBlock.text,
     usage: {
