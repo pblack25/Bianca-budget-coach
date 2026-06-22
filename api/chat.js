@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
     const cleanCode = code.trim().toUpperCase();
 
     if (!SUPABASE_URL) return res.status(500).json({ error: 'Step 3 failed: SUPABASE_URL not set.' });
+return res.status(200).json({ text: 'URL check: ' + SUPABASE_URL, usage: { used: 0, limit: 30, unlimited: false, tier: 'basic' } });
     if (!SUPABASE_KEY) return res.status(500).json({ error: 'Step 4 failed: SUPABASE_SERVICE_KEY not set.' });
     if (!ANTHROPIC_KEY) return res.status(500).json({ error: 'Step 5 failed: ANTHROPIC_API_KEY not set.' });
 
