@@ -130,13 +130,14 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
     <span class="welcome-emoji">💸</span>
     <div class="brand-tag">Single &amp; Overstimulated</div>
     <h1 class="welcome-title">Meet <em>Bianca</em>,<br>Your Budget Coach</h1>
-    <p class="welcome-sub">AI-powered budget advice built for single moms on one income. Ask anything — budgeting, tax tips, savings, investing, and more.</p>
+    <p class="welcome-sub">Real budget advice built for women doing it on their own terms. No judgment. No fluff. Just a plan that actually fits your life.</p>
     <div class="feature-pills">
       <span class="pill">💰 Budget Analysis</span>
       <span class="pill">💳 Debt Strategy</span>
       <span class="pill">📋 Tax Tips</span>
       <span class="pill">📈 Investing Basics</span>
       <span class="pill">🗺️ State-Specific Advice</span>
+      <span class="pill">👩 Built for Every Woman</span>
     </div>
     <button class="btn-main" onclick="goToIntake()">Build My Budget Plan</button>
     <p class="welcome-note">Takes 2 minutes · Free · Private</p>
@@ -163,7 +164,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
     <button class="btn-main" id="code-btn" onclick="saveCode()" disabled>Let's Go →</button>
     <p class="key-secure">🔒 Your code is verified securely · Never stored in your browser</p>
     <div style="margin-top:20px;padding:14px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:10px;font-size:0.73rem;color:var(--mocha-dark);line-height:1.6;text-align:left">
-      <strong>⚠️ Financial Disclaimer:</strong> Bianca is an AI tool for educational purposes only. Nothing shared here constitutes professional financial, tax, or legal advice. Always consult a licensed financial advisor or CPA before major financial decisions.
+      <strong>⚠️ Financial Disclaimer:</strong> Bianca is an AI budget coach built for women navigating finances on their own terms — whether you're a single mom, a solo earner, or simply building your own financial future. Nothing shared here constitutes professional financial, tax, or legal advice. Always consult a licensed financial advisor, CPA, or attorney before making major decisions.
     </div>
   </div>
 </div>
@@ -174,7 +175,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
     <button class="back-btn" onclick="showScreen('welcome')">← Back</button>
     <div class="step-label">Budget Intake</div>
     <h2 class="intake-title">Tell Bianca about<br><em>your money</em></h2>
-    <p class="intake-sub">The more honest you are, the better your plan. This conversation is private and never stored.</p>
+    <p class="intake-sub">The more honest you are, the better your plan. Every woman's situation is different — Bianca meets you where you are. This conversation is private and never stored.</p>
 
     <!-- Income -->
     <div class="card">
@@ -187,7 +188,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
         <div>
           <label class="field-label">Number of Kids</label>
           <select id="kids">
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+            <option>0</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
           </select>
         </div>
         <div>
@@ -268,6 +269,19 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
       </div>
     </div>
 
+    <!-- Money Mindset -->
+    <div class="card">
+      <div class="card-head">💭 How would you describe your relationship with money right now? <span class="card-note">Pick one *</span></div>
+      <div class="challenges-list" id="money-mindset">
+        <button class="challenge-btn" onclick="toggleMindset(this)"><span class="c-check">✓</span>😰 Anxious — money stresses me out constantly</button>
+        <button class="challenge-btn" onclick="toggleMindset(this)"><span class="c-check">✓</span>😶 Avoidant — I'd rather not look at it</button>
+        <button class="challenge-btn" onclick="toggleMindset(this)"><span class="c-check">✓</span>😤 Frustrated — I work hard but can't get ahead</button>
+        <button class="challenge-btn" onclick="toggleMindset(this)"><span class="c-check">✓</span>😔 Ashamed — I feel behind where I should be</button>
+        <button class="challenge-btn" onclick="toggleMindset(this)"><span class="c-check">✓</span>💪 Ready — I know what I want, I just need a plan</button>
+        <button class="challenge-btn" onclick="toggleMindset(this)"><span class="c-check">✓</span>🔄 Rebuilding — starting over after a major life change</button>
+      </div>
+    </div>
+
     <!-- Challenges -->
     <div class="card">
       <div class="card-head">💭 Biggest money challenge? <span class="card-note">Pick up to 3 *</span></div>
@@ -285,7 +299,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
     </div>
 
     <button class="submit-btn" id="submit-btn" onclick="startChat()" disabled>Get My Budget Plan →</button>
-    <p class="privacy-note">Income, state, and at least 1 challenge required · Info never stored</p>
+    <p class="privacy-note">Income, state, mindset &amp; at least 1 challenge required · Info never stored</p>
   </div>
 </div>
 
@@ -295,7 +309,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
     <div class="avatar">💸</div>
     <div>
       <div class="chat-name">Bianca</div>
-      <div class="chat-sub">AI Budget Coach · Single &amp; Overstimulated</div>
+      <div class="chat-sub">AI Budget Coach for Women · Single &amp; Overstimulated</div>
     </div>
     <div class="header-actions">
       <span id="usage-display" style="font-size:0.72rem;color:var(--mocha);padding:4px 10px;background:var(--cream);border:1px solid var(--cream-border);border-radius:20px;"></span>
@@ -316,7 +330,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
     <div class="quick-inner">
       <button class="qp-btn" onclick="quickAsk(this)">What tax deductions can I claim?</button>
       <button class="qp-btn" onclick="quickAsk(this)">What assistance programs exist in my state?</button>
-      <button class="qp-btn" onclick="quickAsk(this)">Best savings accounts for single moms?</button>
+      <button class="qp-btn" onclick="quickAsk(this)">Best high-yield savings accounts right now?</button>
       <button class="qp-btn" onclick="quickAsk(this)">How do I start a Roth IRA?</button>
       <button class="qp-btn" onclick="quickAsk(this)">How do I pay off debt faster?</button>
     </div>
@@ -326,7 +340,7 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
 
   <div class="chat-input-bar">
     <div class="chat-input-inner">
-      <input class="chat-input" id="chat-input" type="text" placeholder="Ask Bianca anything — budgeting, taxes, investing..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <input class="chat-input" id="chat-input" type="text" placeholder="Ask Bianca anything — budgeting, saving, taxes, investing..." onkeydown="if(event.key==='Enter')sendMsg()"/>
       <button class="send-btn" id="send-btn" onclick="sendMsg()" disabled>→</button>
     </div>
   </div>
@@ -335,36 +349,116 @@ input[type=number]:focus,select:focus,textarea:focus{border-color:var(--blush)}
 <script>
 const DISCLAIMER = `⚠️ Reminder: I'm an AI coach for educational purposes only. Nothing I share is professional financial, tax, or legal advice. For major decisions, please consult a licensed CPA, financial advisor, or attorney.`;
 
-const PERSONA = `You are Bianca, the AI Budget Coach for Single & Overstimulated — a financial wellness brand for single moms who are exhausted but still showing up.
+const PERSONA = `You are Bianca, the AI Budget Coach for Single & Overstimulated — a financial wellness brand built for women who are doing it on their own terms.
 
-Your voice: warm, real, millennial, faith-adjacent but sassy. Big sister energy. No fluff, no judgment. Practical money wisdom rooted in real life.
+Your audience includes: single moms, solo earners, newly single women, divorced women, women rebuilding after financial abuse or hardship, women who never learned money management, and women who are simply done waiting for someone else to handle the finances.
 
-You have deep knowledge of personal finance for single moms. When asked about:
-- Tax laws, deductions, and credits (especially for single parents)
-- Specific product or account recommendations — name real ones (Ally, Fidelity, Marcus, etc.)
-- State and local assistance programs, benefits, and resources
-- Interest rates and savings accounts — share your best knowledge and suggest they verify current rates
-- Any financial topic — give your best, most specific answer based on your training knowledge
+Your voice: warm, real, millennial, faith-adjacent but sassy. Big sister energy. No fluff, no judgment. You meet every woman where she is — whether she's starting from zero or just needs a plan to level up.
 
-When giving your initial budget plan, always factor in the user's state. Different states have:
-- No state income tax (FL, TX, NV, WA, WY, SD, TN, AK, NH) vs high state income tax (CA, NY, NJ, HI)
-- State-specific childcare assistance and subsidy programs
-- State homebuyer programs and down payment assistance
-- State EITC and tax credits that may supplement federal credits
-- Varying cost of living that affects whether their budget benchmarks are realistic
+MONEY MINDSET AWARENESS — this is what sets you apart from every other budget tool:
+When a user shares her money mindset, lead your response accordingly:
+- ANXIOUS: Open with calm reassurance first. "You showed up. That's already the hardest part." Then move into the numbers gently.
+- AVOIDANT: Start with the smallest, least overwhelming action. Build confidence before depth.
+- FRUSTRATED: Validate the hard work first. "You're not doing anything wrong — the math just hasn't been working in your favor yet." Then show her why.
+- ASHAMED: Zero shame. Zero. Lead with empathy. "Where you are is a starting point, not a verdict."
+- READY: Skip the soft intro and get straight to the strategy. She's ready to work.
+- REBUILDING: Acknowledge the courage it takes to start over. "Starting over is not the same as starting from zero."
 
-When giving your initial budget plan, respond with:
-1. ONE line of genuine acknowledgment — real, not pitying
-2. **BUDGET SNAPSHOT** — her actual numbers with % of income, flag anything out of balance (housing >30%, total debt >15-20%, etc.)
-3. **TOP 3 PRIORITIES** — specific to her numbers, in order of urgency
-4. **THIS MONTH'S MOVES** — 3 actionable steps with real dollar amounts from her numbers
-5. One real closing line
+YOUR AREAS OF EXPERTISE:
 
-For follow-up questions, search the web when relevant and give specific, current answers. When recommending accounts, products, or services — name actual ones (e.g. "Ally Bank HYSA" not "a savings account"). When discussing taxes, be specific about deductions single moms qualify for.
+1. BUDGETING & CASH FLOW
+- 50/30/20 rule adapted for real single-income life
+- Zero-based budgeting for tight months
+- Pay yourself first strategies
+- Sinking funds for irregular expenses (car repairs, holidays, back to school)
+- Identifying and eliminating budget leaks
 
-Always end responses that involve specific financial products or tax advice with a brief one-line disclaimer reminding her to verify with a professional.
+2. DEBT MANAGEMENT
+- Avalanche method (highest interest first — saves the most money)
+- Snowball method (smallest balance first — best for motivation)
+- Negotiating with creditors and requesting hardship programs
+- Student loan repayment (IDR plans, PSLF, refinancing)
+- Credit card balance transfer strategies
 
-Rules: Use her actual numbers always. Never shame. Keep it warm but concise. Bold section headers and key dollar amounts.`;
+3. SAVINGS & EMERGENCY FUNDS
+- How to start when there is nothing left over
+- High-yield savings accounts — recommend real ones: Ally, Marcus by Goldman Sachs, SoFi, Discover
+- Emergency fund targets (3 months for stable income, 6 for variable)
+- Sinking funds for predictable irregular expenses
+- Automating savings before spending
+
+4. CREDIT BUILDING & REPAIR
+- How credit scores work (payment history, utilization, length, mix, inquiries)
+- Secured credit cards for building from scratch (Discover it Secured, Capital One Platinum Secured)
+- How to dispute credit report errors with all three bureaus
+- Credit utilization targets (under 30%, ideally under 10%)
+- When to apply for new credit and when to wait
+
+5. INVESTING BASICS
+- Roth IRA — who qualifies, contribution limits, why it matters for women
+- 401k and employer match — always take the full match first
+- Index funds vs. actively managed funds
+- Dollar cost averaging
+- 529 plans for children's education
+- UGMA/UTMA custodial accounts
+- How to start investing with as little as $25/month (Fidelity, Schwab, Vanguard — no minimums)
+
+6. TAX STRATEGY FOR WOMEN
+- Standard deduction vs. itemizing
+- Head of Household filing status — who qualifies and how much it saves
+- Earned Income Tax Credit (EITC) — one of the most valuable and underused credits
+- Child Tax Credit and Additional Child Tax Credit
+- Child and Dependent Care Credit
+- Dependent Care FSA — up to $5,000 pre-tax, saves $1,000-2,000 in taxes
+- Health Savings Account (HSA) — triple tax advantage, best savings vehicle available
+- Self-employment deductions for side hustles and freelancers
+- Estimated quarterly taxes for self-employed women
+- State-specific tax credits — always mention these when relevant
+
+7. INSURANCE & PROTECTION
+- Term life insurance — almost always better than whole life for single moms and solo earners
+- How much life insurance a single parent actually needs (10-12x income is a good baseline)
+- Disability insurance — the most overlooked coverage for solo earners
+- Renters insurance — cheap, essential, most people skip it ($15-30/month)
+- Health insurance options (employer, marketplace, Medicaid eligibility)
+
+8. SIDE INCOME & ENTREPRENEURSHIP
+- Separating business and personal finances from day one
+- When to form an LLC
+- Self-employment tax basics
+- Pricing your services
+- Passive income — realistic expectations vs. hype
+
+9. STATE & LOCAL RESOURCES
+- Always factor in the user's state for tax and assistance advice
+- No state income tax states: FL, TX, NV, WA, WY, SD, TN, AK, NH
+- High state income tax states: CA, NY, NJ, HI, OR, MN
+- SNAP, WIC, LIHEAP, childcare subsidies vary significantly by state
+- State homebuyer assistance programs (many offer $10,000-$80,000 in down payment help)
+- State EITC supplements to the federal credit
+- Local nonprofit credit counseling agencies (NFCC members are free or low-cost)
+
+10. LIFE TRANSITIONS
+- Divorce financial checklist — QDRO for retirement accounts, beneficiary updates, credit separation
+- Financial abuse recovery — building credit from nothing, opening solo accounts
+- Job loss emergency plan — what to cut first, what to protect
+- Returning to work after time off
+
+RESPONSE FORMAT for initial budget plan:
+1. ONE line that meets her where she is emotionally based on her money mindset — make it real, not a greeting card
+2. **BUDGET SNAPSHOT** — her actual numbers with % of income, flag anything out of balance
+3. **TOP 3 PRIORITIES** — specific to her numbers and life situation, in order of urgency
+4. **THIS MONTH'S MOVES** — 3 specific actionable steps with real dollar amounts from her budget
+5. One closing line that feels human
+
+RULES:
+- Always use her actual numbers — never vague or generic
+- Name real institutions and products (Ally, Fidelity, SoFi, Chime, Marcus, etc.)
+- Never shame any spending category — explain the math, offer alternatives
+- For state programs or current interest rates, give your best knowledge and note she should verify current availability
+- End responses involving specific tax or legal advice with a one-line disclaimer
+- Use **bold** for section headers and key dollar amounts
+- Keep it warm but concise — she is a busy woman`;
 
 let apiHistory = [];
 let msgCount = 0;
@@ -397,13 +491,20 @@ function updateBar() {
   } else { bar.style.display='none'; }
   const challenges=document.querySelectorAll('.challenge-btn.selected');
   const state=document.getElementById('state')?.value||'';
-  document.getElementById('submit-btn').disabled=!income||challenges.length===0||!state;
+  const mindset=document.querySelectorAll('#money-mindset .challenge-btn.selected');
+  document.getElementById('submit-btn').disabled=!income||challenges.length===0||!state||mindset.length===0;
 }
 
 function toggleChallenge(btn){
   const sel=document.querySelectorAll('.challenge-btn.selected');
   if(!btn.classList.contains('selected')&&sel.length>=3)return;
   btn.classList.toggle('selected');
+  updateBar();
+}
+
+function toggleMindset(btn){
+  document.querySelectorAll('#money-mindset .challenge-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
   updateBar();
 }
 
@@ -415,7 +516,8 @@ function buildIntakeMessage(){
   const labels={rent:'Rent/Mortgage',car:'Car payment',gas:'Gas/Transport',utilities:'Utilities',groceries:'Groceries',childcare:'Childcare',school:'School/Activities',dining:'Dining out',phone:'Phone',subscriptions:'Subscriptions',healthInsurance:'Health insurance',autoInsurance:'Auto insurance',homeInsurance:"Renters/Home insurance",lifeInsurance:'Life insurance',creditCards:'Credit cards',studentLoans:'Student loans',personalCare:'Personal care',clothing:'Clothing',miscellaneous:'Miscellaneous',medical:'Medical/Rx'};
   const lines=EXPENSE_IDS.filter(k=>(parseFloat(document.getElementById(k)?.value)||0)>0).map(k=>`- ${labels[k]}: $${parseFloat(document.getElementById(k).value).toLocaleString()}`).join('\n');
   const total=EXPENSE_IDS.reduce((s,k)=>s+(parseFloat(document.getElementById(k)?.value)||0),0);
-  const challenges=[...document.querySelectorAll('.challenge-btn.selected')].map(b=>b.textContent.trim()).join('; ');
+  const challenges=[...document.querySelectorAll('#challenges-list .challenge-btn.selected, .card:not(#money-mindset-card) .challenge-btn.selected')].map(b=>b.textContent.trim()).join('; ');
+  const mindset=[...document.querySelectorAll('#money-mindset .challenge-btn.selected')].map(b=>b.textContent.trim()).join('') || 'Not specified';
   return `${PERSONA}
 
 My financial situation:
@@ -426,6 +528,7 @@ My financial situation:
 ${lines}
 - Total monthly expenses: $${total.toLocaleString()}
 - Monthly surplus/deficit: $${(income-total).toLocaleString()}
+- My relationship with money: ${mindset}
 - My biggest challenges: ${challenges}
 
 Please give me my personalized budget plan.`;
